@@ -19,6 +19,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  weui: 0.0.3
   dart_validator:
     path: ../
 

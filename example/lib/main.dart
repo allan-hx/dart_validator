@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:weui/weui.dart';
 import 'package:dart_validator/dart_validator.dart';
 
 void main() => runApp(MyApp());
@@ -17,7 +18,7 @@ final Map<String, List<Schema>> descriptor = {
     ),
     Schema(
       validator: (key, value, callback) {
-        callback(value < 18 ? '未成年不能通过' : null);
+        callback((double.parse(value)) < 18 ? '未成年不能通过' : null);
       }
     )
   ],
@@ -40,25 +41,14 @@ final Map<String, List<Schema>> descriptor = {
 };
 
 final validator = Validator(descriptor);
-final data = {
-  'name': '123',
-  'age': 13,
-  'sex': '男',
-  'phone': '15818440278',
-};
 
 class MyApp extends StatelessWidget {
-  MyApp() {
-    validator.validate(
-      data,
-      fail: (message, key) {
-        print('$key: $message');
-      },
-      success: () {
-        print('校验成功');
-      }
-    );
-  }
+  final data = {
+    'name': '123',
+    'age': '13',
+    'sex': '男',
+    'phone': '15818440278',
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -71,15 +61,30 @@ class MyApp extends StatelessWidget {
         appBar: AppBar(
           title: Text('validator'),
         ),
-        body: Center(
-          child: MaterialButton(
-            color: Colors.black,
-            textColor: Colors.white,
-            onPressed: () {
-            },
-            child: Text('验证'),
-          ),
-        ),
+        body: Builder(
+          builder: (BuildContext context) {
+            return Center(
+              child: MaterialButton(
+                color: Colors.blue,
+                textColor: Colors.white,
+                onPressed: () {
+                  validator.validate(
+                    data,
+                    fail: (message, key) {
+                      WeToast.info(context)('$key: $message');
+                    },
+                    success: () {
+                      WeToast.success(context)(
+                        message: '校验成功'
+                      );
+                    }
+                  );
+                },
+                child: Text('验证'),
+              ),
+            );
+          },
+        )
       ),
     );
   }
